@@ -2,7 +2,7 @@
 
 #ifdef ENDIANNESS_HEADER
 
-static Endianness_t sysEndianness = 255;
+static Endianness_t sysEndianness = 0;
 
 Endianness_t getEndian() {
 	uint8_t a[2] = { 0x12, 0x34 };
@@ -14,7 +14,9 @@ Endianness_t getEndian() {
 }
 
 void detectEndian() {
-	sysEndianness = getEndian();
+	if (!endiannessIsSet()) {
+		sysEndianness = getEndian();
+	}
 }
 
 void swapEndianness(void* data, size_t size) {
@@ -28,8 +30,8 @@ void swapEndianness(void* data, size_t size) {
 }
 
 void toBigEndian(void* data, size_t size) {
-	if (sysEndianness == 255) {
-		sysEndianness = getEndian();
+	if (!endiannessIsSet()) {
+		detectEndian();
 	}
 
 	if (sysEndianness == Little) {
@@ -38,8 +40,8 @@ void toBigEndian(void* data, size_t size) {
 }
 
 void toLittleEndian(void* data, size_t size) {
-	if (sysEndianness == 255) {
-		sysEndianness = getEndian();
+	if (!endiannessIsSet()) {
+		detectEndian();
 	}
 
 	if (sysEndianness == Big) {

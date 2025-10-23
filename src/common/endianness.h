@@ -12,6 +12,8 @@ enum Endianness {
 
 typedef enum Endianness Endianness_t;
 
+#define endiannessIsSet() ((sysEndianness == Little) || (sysEndianness == Big))
+
 extern Endianness_t sysEndianness;
 
 /**
