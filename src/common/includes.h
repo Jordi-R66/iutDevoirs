@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include <time.h>
+
 #ifdef _WIN32
 	#error "Windows n'est pas supporté pour le moment"
 #else
