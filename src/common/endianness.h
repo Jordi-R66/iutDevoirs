@@ -1,0 +1,41 @@
+#pragma once
+
+#ifndef ENDIANNESS_HEADER
+
+#include <stddef.h>
+#include <stdint.h>
+
+enum Endianness {
+	Little = 0,
+	Big = 1
+};
+
+typedef enum Endianness Endianness_t;
+
+extern Endianness_t sysEndianness;
+
+/**
+ * @brief Get the Endian object (either Big or Little)
+ * 
+ * @return Endianness_t 
+ */
+Endianness_t getEndian();
+
+/**
+ * @brief Detects and sets the sysEndianness variable
+ * 
+ */
+void detectEndian();
+
+/**
+ * @brief Swaps a data's endianness
+ * 
+ * @param data The pointer to the data
+ * @param size The size of the data (bytes)
+ */
+void swapEndianness(void* data, size_t size);
+void toBigEndian(void* data, size_t size);
+void toLittleEndian(void* data, size_t size);
+
+#define ENDIANNESS_HEADER
+#endif
