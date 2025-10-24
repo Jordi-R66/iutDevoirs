@@ -16,6 +16,8 @@
 	#include <sys/socket.h>
 	#include <sys/types.h>
 	#include <arpa/inet.h>
+
+	#include <unistd.h>
 #endif
 
 #define COMMON_INCLUDES
