@@ -30,4 +30,12 @@ Config readConfig(char* filename) {
 	return output;
 }
 
+void writeConfig(char* filename, Config config) {
+	FILE* fp = fopen(filename, "w");
+
+	fwrite(&config, CONFIG_SIZE, 1, fp);
+	fclose(fp);
+}
+
+
 #endif
