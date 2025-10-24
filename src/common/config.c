@@ -37,5 +37,19 @@ void writeConfig(char* filename, Config config) {
 	fclose(fp);
 }
 
+sockAddrIn configToSockAddr(Config config) {
+	detectEndian();
+
+	sockAddrIn output;
+
+	output.sin_addr.s_addr = config.ip;
+	output.sin_port = config.port;
+	output.sin_family = AF_INET;
+
+	toBigEndian(&output.sin_addr.s_addr, 4);
+	toBigEndian(&output.sin_port, 2);
+
+	return output;
+}
 
 #endif
