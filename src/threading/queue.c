@@ -22,3 +22,24 @@ void destroyQueue(QPtr queue) {
 	queue->head = NULL;
 	queue->tail = NULL;
 }
+
+void pushQueue(QPtr queue, ptr data) {
+	QNodePtr node = calloc(1, QNODE_SIZE);
+
+	node->data = data;
+	node->next = NULL;
+
+	pthread_mutex_lock(&queue->mutex);
+
+	if (queue->tail) {
+		queue->tail->next = node;
+	} else {
+		queue->head = node;
+	}
+
+	queue->tail = node;
+
+	pthread_cond_signal(&queue->cond);
+	pthread_mutex_unlock(&queue->mutex);
+}
+
