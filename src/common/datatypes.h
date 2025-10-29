@@ -12,6 +12,8 @@ typedef uint16_t idProf_t;
 typedef uint16_t idRessource_t;
 typedef uint16_t idGroupe_t;
 
+typedef void* ptr;
+
 #pragma pack(1)
 
 typedef struct Devoir {
