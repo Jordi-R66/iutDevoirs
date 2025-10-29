@@ -8,8 +8,8 @@
 
 typedef struct queue_node {
 	ptr data;
-	QueueNode* next;
-} QueueNode, *QNodePtr;
+	QNodePtr next;
+} QNode, *QNodePtr;
 
 typedef struct {
 	QNodePtr head, tail;
