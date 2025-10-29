@@ -43,3 +43,32 @@ void pushQueue(QPtr queue, ptr data) {
 	pthread_mutex_unlock(&queue->mutex);
 }
 
+ptr popQueue(QPtr queue) {
+	ptr output;
+
+	pthread_mutex_lock(&queue->mutex);
+
+	while (!queue->head && !queue->stop) {
+		pthread_cond_wait(&queue->cond, &queue->mutex);
+	}
+
+	if (queue->stop) {
+		pthread_mutex_unlock(&queue->mutex);
+		output = NULL;
+	} else {
+		QNodePtr node = queue->head;
+
+		if (!queue->head) {
+			queue->tail = NULL;
+		}
+
+		pthread_mutex_unlock(&queue->mutex);
+		ptr data = node->data;
+		node->data = NULL;
+
+		free(node);
+	}
+
+	return output;
+}
+
