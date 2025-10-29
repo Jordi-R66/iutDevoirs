@@ -21,5 +21,8 @@ typedef struct {
 
 #pragma pack()
 
+#define QNODE_SIZE sizeof(QNode)
+#define QUEUE_SIZE sizeof(Queue)
+
 #define QUEUE_HEADER
 #endif
