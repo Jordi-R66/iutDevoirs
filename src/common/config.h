@@ -17,6 +17,7 @@ typedef struct Config {
 
 #pragma pack()
 
+bool fileExists(char* filename);
 Config createConfig(uint8_t ip[4], uint16_t port);
 Config readConfig(char* filename);
 void writeConfig(char* filename, Config config);

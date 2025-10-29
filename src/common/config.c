@@ -1,8 +1,15 @@
 #include "config.h"
 
 #include "endianness.h"
+#include <sys/stat.h>
 
 #ifdef COMMON_CONFIG
+
+bool fileExists(char* filename) {
+	struct stat buffer;
+
+	return stat(filename, &buffer) == 0;
+}
 
 Config createConfig(uint8_t ip[4], uint16_t port) {
 	detectEndian();
