@@ -9,3 +9,16 @@ void initQueue(QPtr queue) {
 	pthread_cond_init(&queue->cond, NULL);
 }
 
+void destroyQueue(QPtr queue) {
+	bool readyToClose = false;
+
+	do {
+		readyToClose = popQueue(queue) == NULL;
+	} while (!readyToClose);
+
+	pthread_mutex_destroy(&queue->mutex);
+	pthread_cond_destroy(&queue->cond);
+
+	queue->head = NULL;
+	queue->tail = NULL;
+}
