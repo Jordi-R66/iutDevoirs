@@ -26,12 +26,12 @@ typedef struct queue {
 
 // Fonctions
 
-void initQueue(QPtr Queue);
-void destroyQueue(QPtr Queue);
+void initQueue(QPtr queue);
+void destroyQueue(QPtr queue);
 
-void pushQueue(QPtr Queue, ptr data);
-ptr popQueue(QPtr Queue);
-void stopQueue(QPtr Queue);
+void pushQueue(QPtr queue, ptr data);
+ptr popQueue(QPtr queue);
+void stopQueue(QPtr queue);
 
 #define QUEUE_HEADER
 #endif
