@@ -7,7 +7,7 @@
 #include "../common/endianness.h"
 #include "../common/config.h"
 
-#include <pthread.h>
+#include "../threading/threading.h"
 
 #define SERVER_COMMON
 #endif
