@@ -72,3 +72,10 @@ ptr popQueue(QPtr queue) {
 	return output;
 }
 
+void stopQueue(QPtr queue) {
+	pthread_mutex_lock(&queue->mutex);
+
+	queue->stop = true;
+	pthread_cond_broadcast(&queue->cond);
+	pthread_mutex_unlock(&queue->mutex);
+}
