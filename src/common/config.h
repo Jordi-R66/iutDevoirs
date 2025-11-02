@@ -3,6 +3,9 @@
 #ifndef COMMON_CONFIG
 
 #include "includes.h"
+#include "endianness.h"
+
+#define IS_DIGIT(CHAR) (('0' <= CHAR) && (CHAR <= '9'))
 
 #pragma pack(1)
 typedef struct sockaddr_in sockAddrIn;
