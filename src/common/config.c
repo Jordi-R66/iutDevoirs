@@ -5,6 +5,12 @@
 
 #ifdef COMMON_CONFIG
 
+const Config ERR_CONF = {
+	.ip = 0xFFFFFFFF,
+	.port = 0x0000,
+	.endianness = 0xFF
+};
+
 bool fileExists(char* filename) {
 	struct stat buffer;
 

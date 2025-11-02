@@ -17,6 +17,8 @@ typedef struct Config {
 
 #pragma pack()
 
+extern const Config ERR_CONF;
+
 bool fileExists(char* filename);
 Config createConfig(uint8_t ip[4], uint16_t port);
 Config readConfig(char* filename);
