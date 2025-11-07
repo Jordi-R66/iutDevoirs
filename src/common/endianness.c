@@ -2,7 +2,7 @@
 
 #ifdef ENDIANNESS_HEADER
 
-static Endianness_t sysEndianness = 0;
+Endianness_t sysEndianness = 0;
 
 Endianness_t getEndian() {
 	uint8_t a[2] = { 0x12, 0x34 };
