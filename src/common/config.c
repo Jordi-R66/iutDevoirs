@@ -79,6 +79,84 @@ static uint8_t* parseIpV4(char* ipString, int8_t delimiters[5]) {
 	return octets;
 };
 
+Config parseConfig(char* ipString, char* portString) {
+	Config output = ERR_CONF;
+
+	uint8_t ip[4] = {0};
+	int8_t delimiters[5] = {0};
+
+	size_t lenIp, lenPort, octetCount;
+	bool continueFunction = true;
+
+	lenIp = strnlen(ipString, 16);
+	lenPort = strnlen(portString, 6);
+
+	continueFunction = ((7 <= lenIp) && (lenIp <= 15)) && ((0 < lenPort) && (lenPort <= 5));
+
+	delimiters[0] = -1;
+	delimiters[4] = lenIp;
+
+	if (!continueFunction) {
+		fprintf(stderr, "La configuration fournie ne passe pas le premier test de formatage de l'IP et/ou du port !\n");
+		exit(EXIT_FAILURE);
+	}
+
+	octetCount = 1;
+	uint8_t i;
+	uint8_t nDelim = 1;
+	char c;
+
+	for (i = 0; i < lenIp; i++) {
+		c = ipString[i];
+		octetCount += c == '.';
+
+		if ((c != '.') && (!IS_DIGIT(c) || (octetCount > 4))) {
+			continueFunction = false;
+			break;
+		} else if ((c == '.') && (nDelim < 4)) {
+			delimiters[nDelim++] = i;
+		}
+	}
+
+	continueFunction &= (octetCount == 4);
+
+	if (!continueFunction) {
+		fprintf(stderr, "La configuration fournie ne passe pas le second test de formatage de l'IP !\n");
+		exit(EXIT_FAILURE);
+	}
+
+	for (i = 0; i < lenPort; i++) {
+		c = portString[i];
+
+		if (c != 0 && !IS_DIGIT(c)) {
+			continueFunction = false;
+			break;
+		}
+	}
+
+	if (!continueFunction) {
+		fprintf(stderr, "La configuration fournie ne passe pas le second test de formatage du port !\n");
+		exit(EXIT_FAILURE);
+	}
+
+	memcpy(ip, parseIpV4(ipString, delimiters), sizeof(ip));
+
+	int portVal = atoi(portString);
+
+	if ((0 < portVal) && (portVal <= 0xFFFF)) {
+		output.port = (uint16_t)portVal;
+	} else {
+		continueFunction = false;
+		fprintf(stderr, "La configuration fournie ne passe pas le dernier test de formatage du port !\n");
+		exit(EXIT_FAILURE);
+	}
+
+	output.ip = *(uint32_t*)ip;
+	output.endianness = getEndian();
+
+	return output;
+}
+
 sockAddrIn configToSockAddr(Config config) {
 	detectEndian();
 

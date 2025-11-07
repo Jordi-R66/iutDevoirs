@@ -4,6 +4,7 @@
 
 #include "includes.h"
 #include "endianness.h"
+#include "datatypes.h"
 
 #define IS_DIGIT(CHAR) (('0' <= CHAR) && (CHAR <= '9'))
 
@@ -26,6 +27,8 @@ bool fileExists(char* filename);
 Config createConfig(uint8_t ip[4], uint16_t port);
 Config readConfig(char* filename);
 void writeConfig(char* filename, Config config);
+
+Config parseConfig(char* ipString, char* portString);
 
 sockAddrIn configToSockAddr(Config config);
 
