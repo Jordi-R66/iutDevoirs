@@ -8,7 +8,7 @@
 
 typedef struct queue_node {
 	ptr data;
-	QNodePtr next;
+	ptr next; // QNodePTR
 } QNode, *QNodePtr;
 
 typedef struct queue {
