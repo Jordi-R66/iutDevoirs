@@ -50,6 +50,35 @@ void writeConfig(char* filename, Config config) {
 	fclose(fp);
 }
 
+static uint8_t* parseIpV4(char* ipString, int8_t delimiters[5]) {
+	static uint8_t octets[4] = {0};
+	char octetStr[4];
+	memset(octetStr, '\0', sizeof(octetStr));
+
+	for (uint8_t octet = 0; octet < 4; octet++) {
+		int8_t before, after;
+
+		before = delimiters[octet];
+		after = delimiters[octet + 1];
+
+		ptr src = &ipString[before + 1];
+
+		strncpy(octetStr, src, after - before - 1);
+		int val = atoi(octetStr);
+
+		if ((0 <= val) && (val < 256)) {
+			octets[octet] = (uint8_t)val;
+		} else {
+			fprintf(stderr, "La configuration fournie ne passe pas le dernier test de formatage de l'adresse IP !\n");
+			exit(EXIT_FAILURE);
+		}
+
+		memset(octetStr, '\0', sizeof(octetStr));
+	}
+
+	return octets;
+};
+
 sockAddrIn configToSockAddr(Config config) {
 	detectEndian();
 
