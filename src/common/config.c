@@ -6,8 +6,8 @@
 #ifdef COMMON_CONFIG
 
 const Config ERR_CONF = {
-	.ip = 0xFFFFFFFF,
-	.port = 0x0000,
+	.server_ip = 0xFFFFFFFF,
+	.server_port = 0x0000,
 	.endianness = 0xFF
 };
 
@@ -21,7 +21,7 @@ Config createConfig(uint8_t ip[4], uint16_t port) {
 	detectEndian();
 	Config output = {sysEndianness, 0, port};
 
-	output.ip = *(uint32_t*)ip;
+	output.server_ip = *(uint32_t*)ip;
 
 	return output;
 }
@@ -36,8 +36,8 @@ Config readConfig(char* filename) {
 	fclose(fp);
 
 	if (output.endianness != sysEndianness) {
-		swapEndianness(&output.ip, 4);
-		swapEndianness(&output.port, 2);
+		swapEndianness(&output.server_ip, 4);
+		swapEndianness(&output.server_port, 2);
 	}
 
 	return output;
@@ -144,14 +144,14 @@ Config parseConfig(char* ipString, char* portString) {
 	int portVal = atoi(portString);
 
 	if ((0 < portVal) && (portVal <= 0xFFFF)) {
-		output.port = (uint16_t)portVal;
+		output.server_port = (uint16_t)portVal;
 	} else {
 		continueFunction = false;
 		fprintf(stderr, "La configuration fournie ne passe pas le dernier test de formatage du port !\n");
 		exit(EXIT_FAILURE);
 	}
 
-	output.ip = *(uint32_t*)ip;
+	output.server_ip = *(uint32_t*)ip;
 	output.endianness = getEndian();
 
 	return output;
@@ -162,8 +162,8 @@ sockAddrIn configToSockAddr(Config config) {
 
 	sockAddrIn output;
 
-	output.sin_addr.s_addr = config.ip;
-	output.sin_port = config.port;
+	output.sin_addr.s_addr = config.server_ip;
+	output.sin_port = config.server_port;
 	output.sin_family = AF_INET;
 
 	toBigEndian(&output.sin_addr.s_addr, 4);

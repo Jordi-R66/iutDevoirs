@@ -13,8 +13,8 @@ typedef struct sockaddr_in sockAddrIn;
 
 typedef struct Config {
 	Endianness_t endianness;
-	uint32_t ip;
-	uint16_t port;
+	uint32_t server_ip;
+	uint16_t server_port;
 } Config;
 
 #define CONFIG_SIZE sizeof(Config)
