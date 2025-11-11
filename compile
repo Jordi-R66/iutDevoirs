@@ -1,0 +1,121 @@
+#!/bin/bash
+
+CC="gcc"
+
+DEBUG_FLAGS="-Wall -Wextra -std=gnu17 -O0 -g -fshort-enums"
+PROD_FLAGS="-Wall -Wextra -std=gnu17 -O3 -s -fshort-enums"
+
+CFLAGS=""
+
+MODE=""
+WHICH=""
+
+# MAIN DIRECTORIES
+SOURCE_DIR="src"
+BUILD_DIR="build"
+
+# SOURCES DIRECTORIES
+COMMON_SRC_DIR="$SOURCE_DIR/common"
+SERVER_SRC_DIR="$SOURCE_DIR/server"
+CLIENT_SRC_DIR="$SOURCE_DIR/client"
+THREADING_SRC_DIR="$SOURCE_DIR/threading"
+
+COMMON_SRC_FILES="$COMMON_SRC_DIR/*.c"
+SERVER_SRC_FILES="$SERVER_SRC_DIR/*.c"
+CLIENT_SRC_FILES="$CLIENT_SRC_DIR/*.c"
+THREADING_SRC_FILES="$THREADING_SRC_DIR/*.c"
+
+# BUILD DIRECTORIES
+COMMON_BUILD_DIR="$BUILD_DIR/common"
+SERVER_BUILD_DIR="$BUILD_DIR/server"
+CLIENT_BUILD_DIR="$BUILD_DIR/client"
+THREADING_BUILD_DIR="$BUILD_DIR/threading"
+
+COMMON_OBJ_FILES="$COMMON_BUILD_DIR/*.o"
+SERVER_OBJ_FILES="$SERVER_BUILD_DIR/*.o"
+CLIENT_OBJ_FILES="$CLIENT_BUILD_DIR/*.o"
+THREADING_OBJ_FILES="$THREADING_BUILD_DIR/*.o"
+
+# CHECKING ARGUMENTS
+if [[ "$#" = 0 ]] then
+	MODE="prod"
+	WHICH="both"
+elif [[ "$#" = 1 ]] then
+	MODE="$1"
+	WHICH="both"
+elif [[ "$#" = 2 ]] then
+	MODE="$1"
+	WHICH="$2"
+elif [[ "$#" -gt 2 ]] then
+	echo "Invalid amount of arguments: $#. You must provide a maximum of 2 args!"
+	exit 1
+fi
+
+if [ "$MODE" = "prod" ]; then
+	CFLAGS="$PROD_FLAGS"
+elif [ "$MODE" = "debug" ]; then
+	CFLAGS="$DEBUG_FLAGS"
+else
+	echo "Invalid argument: $MODE"
+	exit 1
+fi
+
+case "$WHICH" in
+	server|client|both)
+		;;
+	*)
+		echo echo "Invalid argument: $WHICH"
+		exit 1
+		;;
+esac
+
+# FUNCTIONS
+
+function generateCommonObj {
+	mkdir -p $COMMON_BUILD_DIR
+
+	$CC $CFLAGS -c $COMMON_SRC_FILES
+	mv *.o $COMMON_BUILD_DIR/
+}
+
+function generateThreadingObj {
+	mkdir -p $THREADING_BUILD_DIR
+
+	$CC $CFLAGS -c $THREADING_SRC_FILES
+	mv *.o $THREADING_BUILD_DIR/
+}
+
+function generateClientObj {
+	mkdir -p $CLIENT_BUILD_DIR
+
+	$CC $CFLAGS -c $CLIENT_SRC_FILES
+	mv *.o $CLIENT_BUILD_DIR/
+}
+
+function generateServerObj {
+	mkdir -p $SERVER_BUILD_DIR
+
+	$CC $CFLAGS -c $SERVER_SRC_FILES
+	mv *.o $SERVER_BUILD_DIR/
+}
+
+# COMMON ACTIONS
+mkdir -p $BUILD_DIR
+
+generateCommonObj
+
+if [[ "$WHICH" = "server" ]] || [[ "$WHICH" = "both" ]] then
+	generateThreadingObj
+	generateServerObj
+
+	$CC $COMMON_OBJ_FILES $THREADING_OBJ_FILES $SERVER_OBJ_FILES -o "$BUILD_DIR"/server.out -lpthread
+	rm -rf $SERVER_BUILD_DIR $THREADING_BUILD_DIR
+fi
+
+if [[ "$WHICH" = "client" ]] || [[ "$WHICH" = "both" ]] then
+	chmod -R u+w $BUILD_DIR
+	$CC $COMMON_OBJ_FILES $CLIENT_OBJ_FILES -o "$BUILD_DIR"/client.out
+	rm -rf $CLIENT_BUILD_DIR $THREADING_BUILD_DIR
+fi
+
+rm -rf $COMMON_BUILD_DIR
