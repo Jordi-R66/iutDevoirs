@@ -23,14 +23,5 @@ typedef struct Config {
 
 extern const Config ERR_CONF;
 
-bool fileExists(char* filename);
-Config createConfig(uint8_t ip[4], uint16_t port);
-Config readConfig(char* filename);
-void writeConfig(char* filename, Config config);
-
-Config parseConfig(char* ipString, char* portString);
-
-sockAddrIn configToSockAddr(Config config);
-
 #define COMMON_CONFIG
 #endif
